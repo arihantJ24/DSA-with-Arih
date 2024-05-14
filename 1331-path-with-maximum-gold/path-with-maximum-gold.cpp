@@ -1,29 +1,36 @@
 class Solution {
 public:
-    int maxi, n ,m;
+    vector<vector<int>> direction {{-1,0}, {0,1} , {0,-1} , {1,0}};
+    int dfs(vector<vector<int>>& grid, int row , int col , int m ,int n){
+        if(row >=m || row<0 || col >=n || col<0 || grid[row][col] == 0){
+            return 0;
+        }
+        int originalvalue = grid[row][col];
+        grid[row][col] = 0;
+        int maxgold = 0;
+        // direction
+
+        for(vector<int>&dir : direction){
+            int new_i = row + dir[0];
+            int new_j = col+ dir[1];
+
+            maxgold = max(maxgold , dfs(grid, new_i , new_j , m ,n));
+        }
+        
+        grid[row][col] = originalvalue ;
+        return maxgold + originalvalue ;
+    }
     int getMaximumGold(vector<vector<int>>& grid) {
-        n = grid.size();
-        m =grid[0].size();
-        for(int i = 0 ; i< n ;i++){
-            for(int j = 0 ;j<m ; j++){
-                if(grid[i][j]!= 0){
-                    solve(grid, i , j ,0);
+        int m = grid.size();
+        int n = grid[0].size();
+        int maxGold = 0;
+        for(int i =0 ;i< m ;i++){
+            for(int j =0;j<n;j++){
+                if(grid[i][j]!=0){
+                    maxGold = max(maxGold, dfs(grid,i,j,m,n));
                 }
             }
         }
-        return maxi;
-    }
-    void solve(vector<vector<int>>& grid , int row ,int col , int curr){
-        if(row<0 || row>=n || col<0 || col>=m || grid[row][col] == 0){
-            maxi = max(maxi,curr);
-            return; 
-        }
-        int val = grid[row][col];
-        grid[row][col] =0;
-        solve(grid, row+1 , col , curr+val);
-        solve(grid, row-1 , col , curr+val);
-        solve(grid, row , col+1 , curr+val);
-        solve(grid, row , col -1 , curr+val);
-        grid[row][col] =val;
+        return maxGold;
     }
 };
