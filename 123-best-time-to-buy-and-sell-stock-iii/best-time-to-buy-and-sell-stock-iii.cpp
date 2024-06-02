@@ -26,12 +26,12 @@ public:
 
     int maxProfit(vector<int>& prices) {
         int n = prices.size();
-        //------------------ memoization ----------------------------
+        //---------------------------- memoization ----------------------------
         // vector<vector<vector<int>>>dp(n,vector<vector<int>>(2,vector<int>(3,-1)));
         // return f1(0,0,n,2,prices,dp);
 
-        // +++++++++++++++++ Tabulation ++++++++++++++++++++++++++
-        vector<vector<vector<int>>>dp(n+1,vector<vector<int>>(2,vector<int>(3,0)));
+        // +++++++++++++++++++++++++ Tabulation ++++++++++++++++++++++++++
+        /* vector<vector<vector<int>>>dp(n+1,vector<vector<int>>(2,vector<int>(3,0)));
         
         for(int idx = n-1;idx>=0;idx--){
             for(int buy = 0;buy<=1;buy++){
@@ -45,7 +45,25 @@ public:
                 }      
             }
         }
+        return dp[0][0][2]; */
+        // =======================================space optimisation ================
+        vector<vector<int>>curr(2,vector<int>(3,0));
+        vector<vector<int>>after(2,vector<int>(3,0));
+
+        for(int idx = n-1;idx>=0;idx--){
+            for(int buy = 0;buy<=1;buy++){
+                for(int transactions = 1;transactions<=2;transactions++){
+                    if(buy==0){
+                        curr[buy][transactions] = max(0+after[0][transactions], -prices[idx]+after[1][transactions]);
+                    }
+                    else{
+                        curr[buy][transactions] = max(0+after[1][transactions], prices[idx]+after[0][transactions-1]);
+                    }
+                }      
+            }
+            after = curr;
+        }
         
-        return dp[0][0][2];
+        return after[0][2];
     }
 };
