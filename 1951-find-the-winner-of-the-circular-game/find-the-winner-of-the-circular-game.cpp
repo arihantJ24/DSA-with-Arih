@@ -1,5 +1,6 @@
 class Solution {
 public:
+    /*
     int helper(ListNode*head, int k){
         ListNode*temp = head;
         while(head->next != head){
@@ -14,21 +15,40 @@ public:
             temp = prev->next;
         }
         return head->val;
-    }
+    } */
+
     int findTheWinner(int n, int k) {
         // ------------------------------M1 -> circular list---------------------
-        if(k==1)return n;
-        ListNode*head = NULL, *tail = NULL;
-        for(int i = 1;i<=n;i++){
-            ListNode* node = new ListNode(i);
-            if(head== NULL) head= tail = node;
-            else{
-                tail->next = node;
-                tail = node;
-            }
-            tail->next= head; // for circular list
-        }
-        return helper(head,k);
+        // if(k==1)return n;
+        // ListNode*head = NULL, *tail = NULL;
+        // for(int i = 1;i<=n;i++){
+        //     ListNode* node = new ListNode(i);
+        //     if(head== NULL) head= tail = node;
+        //     else{
+        //         tail->next = node;
+        //         tail = node;
+        //     }
+        //     tail->next= head; // for circular list
+        // }
+        // return helper(head,k);
 
+
+        // ------------------------------M2 -> Queue---------------------
+
+        queue<int>q;
+        for(int i =1;i<=n;i++){
+            q.push(i);
+        }
+
+        while(q.size() != 1){
+            int size = k;
+            for(int i=1;i<size;i++){
+                int val = q.front();
+                q.pop();
+                q.push(val);
+            }
+            q.pop();
+        }
+        return q.front();
     }
 };
